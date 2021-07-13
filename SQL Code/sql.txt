@@ -1,0 +1,138 @@
+CREATE TABLE Farmer(
+farmerID INT NOT NULL AUTO_INCREMENT,
+farmerName VARCHAR(50) NOT NULL,
+governmentID VARCHAR(20) NOT NULL,
+governmentIDType VARCHAR(20) NOT NULL,
+farmerGender VARCHAR(20) NOT NULL,
+farmerDOB VARCHAR(20) NOT NULL,
+farmerAddress VARCHAR(50) NOT NULL,
+PRIMARY KEY (farmerID)
+);
+
+CREATE TABLE LoginDetails(
+loginID INT NOT NULL AUTO_INCREMENT,
+farmerID INT NOT NULL,
+username VARCHAR(30) NOT NULL,
+password VARCHAR(30) NOT NULL,
+role VARCHAR(30) NOT NULL,
+PRIMARY KEY (loginID)
+);
+
+CREATE TABLE CropVarients(
+varientID INT NOT NULL AUTO_INCREMENT,
+varientName VARCHAR(20) NOT NULL,
+varientQuantity VARCHAR(30) NOT NULL,
+maturityTime VARCHAR(30) NOT NULL,
+soilPreperation VARCHAR(100),
+wateringDetails VARCHAR(100),
+fertilizerDetails VARCHAR(100),
+pesiticideDetails VARCHAR(100),
+knownPests VARCHAR(50),
+knownDiseases VARCHAR(50),
+PRIMARY KEY (varientID)
+);
+
+CREATE TABLE Alerts(
+alertID INT NOT NULL AUTO_INCREMENT,
+farmerID INT NOT NULL,
+alertSubject VARCHAR(30) NOT NULL,
+alertDescription VARCHAR(50) NOT NULL,
+alertDate VARCHAR(20) NOT NULL,
+alertTime VARCHAR(20) NOT NULL,
+PRIMARY KEY(alertID)
+);
+
+CREATE TABLE Field(
+fieldID INT NOT NULL AUTO_INCREMENT,
+fieldName VARCHAR(20) NOT NULL,
+fieldAddress VARCHAR(50) NOT NULL,
+fieldMaxCapacity VARCHAR(30),
+fieldSize VARCHAR(30) NOT NULL,
+PRIMARY KEY(fieldID)
+);
+
+CREATE TABLE Plot(
+plotID INT NOT NULL AUTO_INCREMENT,
+fieldID INT NOT NULL,
+plotName VARCHAR(20) NOT NULL,
+plotInUse VARCHAR(10) NOT NULL,
+soilPreparation VARCHAR(10),
+plotSize VARCHAR(30),
+PRIMARY KEY(plotID)
+);
+
+CREATE TABLE PlantedPlot(
+plantedPlotID INT NOT NULL AUTO_INCREMENT,
+plotID INT NOT NULL,
+varientID INT NOT NULL,
+farmerID INT NOT NULL,
+numberOfCrops INT NOT NULL,
+plantedDate VARCHAR(20) NOT NULL,
+plantedLastFertilized VARCHAR(20),
+lastPesticide VARCHAR(20),
+lastWatered VARCHAR(20),
+miscDetals VARCHAR(50),
+PRIMARY KEY(plantedPlotID)
+);
+
+CREATE TABLE harvested(
+harvestID INT NOT NULL AUTO_INCREMENT,
+plantedPlotID INT NOT NULL,
+farmerID INT NOT NULL,
+harvestedByFarmer INT NOT NULL,
+harvestDate VARCHAR(20),
+harvestAmt VARCHAR(30),
+PRIMARY KEY(harvestID)
+);
+
+CREATE TABLE farmcompany(
+companyID INT NOT NULL AUTO_INCREMENT,
+companyName VARCHAR(30) NOT NULL,
+ownerName VARCHAR(30) NOT NULL,
+ownerGovernmentID VARCHAR(30) NOT NULL,
+ownerGovernmentIDType VARCHAR(30) NOT NULL,
+ownerGender VARCHAR(15),
+ownerDOB VARCHAR(20) NOT NULL,
+ownerAddress VARCHAR(50) NOT NULL,
+PRIMARY KEY(companyID)
+);
+
+ALTER TABLE farmer
+ADD FOREIGN KEY (companyID) REFERENCES farmcompany(companyID);
+
+ALTER TABLE harvested
+ADD FOREIGN KEY (plantedPlotID) REFERENCES Farmer(plantedPlotID);
+
+ALTER TABLE harvested
+ADD FOREIGN KEY (farmerID) REFERENCES Farmer(farmerID);
+
+
+ALTER TABLE LoginDetails
+ADD FOREIGN KEY (farmerID) REFERENCES Farmer(farmerID);
+
+
+ALTER TABLE Alerts
+ADD FOREIGN KEY (farmerID) REFERENCES Farmer(farmerID);
+
+ALTER TABLE Alerts
+ADD FOREIGN KEY (plantedPlotID) REFERENCES plantedplot(plantedPlotID);
+
+ALTER TABLE Alerts
+ADD FOREIGN KEY (weatherID) REFERENCES WeatherForecast(weatherID);
+
+ALTER TABLE Plot
+ADD FOREIGN KEY (fieldID) REFERENCES Field(fieldID);
+
+ALTER TABLE PlantedPlot
+ADD FOREIGN KEY (plotID) REFERENCES Plot(plotID);
+
+ALTER TABLE PlantedPlot
+ADD FOREIGN KEY (varientID) REFERENCES CropVarients(varientID);
+
+ALTER TABLE PlantedPlot
+ADD FOREIGN KEY (farmerID) REFERENCES Farmer(farmerID);
+
+
+
+
+
